@@ -4,34 +4,34 @@ import (
 	"log"
 	"rflpazini/round-six/config"
 	"rflpazini/round-six/internal/server"
+
+	"go.uber.org/zap"
 )
 
 func main() {
 	log.Print("🚀 Server starting...")
-
-	configPath := GetConfigPath("config")
-	log.Print(configPath)
-	configFile, err := config.LoadConfig(configPath)
+	configs, err := loadConfigs()
 	if err != nil {
-		log.Fatalf("Loading config error: %v", err)
+		return
 	}
 
-	cfg, err := config.ParseConfig(configFile)
-	if err != nil {
-		log.Fatalf("Parsing config error: %v", err)
-	}
+	logger, _ := zap.NewProduction()
+	defer func(logger *zap.Logger) {
+		_ = logger.Sync()
+	}(logger)
 
-	s := server.NewServer(cfg)
+	s := server.NewServer(configs, logger)
 	if err := s.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
 
-// GetConfigPath for local or docker env
-func GetConfigPath(config string) string {
-	if config == "docker" {
-		return "./config/config-docker"
+func loadConfigs() (*config.Config, error) {
+	configPath := config.GetConfigPath("config")
+	configFile, err := config.LoadConfig(configPath)
+	if err != nil {
+		log.Fatalf("Loading config error: %v", err)
 	}
 
-	return "./config/config-local"
+	return config.ParseConfig(configFile)
 }

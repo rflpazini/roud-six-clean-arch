@@ -12,3 +12,10 @@ server:
   CtxDefaultTimeout: 12
   CSRF: true
   Debug: false
+
+logger:
+  Development: true
+  DisableCaller: false
+  DisableStacktrace: false
+  Encoding: json
+  Level: info

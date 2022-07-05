@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	playersHTTP "rflpazini/round-six/internal/player"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -30,6 +31,10 @@ func (s *Server) Handlers(e *echo.Echo) error {
 	v1 := e.Group("api/v1")
 
 	health := v1.Group("/health")
+	player := v1.Group("/player")
+
+	playerHandler := playersHTTP.NewPlayerHandler(s.config, s.logger)
+	playersHTTP.PlayerRoutes(player, playerHandler)
 
 	health.GET("", func(c echo.Context) error {
 		log.Infof("Health check: ")

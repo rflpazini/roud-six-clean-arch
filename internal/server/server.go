@@ -9,8 +9,9 @@ import (
 	"syscall"
 	"time"
 
+	"go.uber.org/zap"
+
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 )
 
 const (
@@ -21,12 +22,14 @@ const (
 type Server struct {
 	echo   *echo.Echo
 	config *config.Config
+	logger *zap.Logger
 }
 
-func NewServer(cfg *config.Config) *Server {
+func NewServer(cfg *config.Config, log *zap.Logger) *Server {
 	return &Server{
 		echo.New(),
 		cfg,
+		log,
 	}
 }
 
@@ -40,16 +43,16 @@ func (s *Server) Run() error {
 	}
 
 	go func() {
-		log.Infof("Server is listening on PORT: %s", s.config.Server.Port)
+		s.logger.Sugar().Infof("Server is listening on PORT: %s", s.config.Server.Port)
 		if err := s.echo.StartServer(server); err != nil {
-			log.Fatalf("Error starting Server: ", err)
+			s.logger.Sugar().Fatalf("Error starting Server: ", err)
 		}
 	}()
 
 	go func() {
-		log.Infof("Starting Debug Server on PORT: %s", s.config.Server.PprofPort)
+		s.logger.Sugar().Infof("Starting Debug Server on PORT: %s", s.config.Server.PprofPort)
 		if err := http.ListenAndServe(s.config.Server.PprofPort, http.DefaultServeMux); err != nil {
-			log.Errorf("Error PPROF ListenAndServe: %s", err)
+			s.logger.Sugar().Errorf("Error PPROF ListenAndServe: %s", err)
 		}
 	}()
 
@@ -65,6 +68,6 @@ func (s *Server) Run() error {
 	ctx, shutdown := context.WithTimeout(context.Background(), ctxTimeout*time.Second)
 	defer shutdown()
 
-	log.Info("Server Exited Properly")
+	s.logger.Sugar().Info("Server Exited Properly")
 	return s.echo.Server.Shutdown(ctx)
 }

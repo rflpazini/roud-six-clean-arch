@@ -45,7 +45,7 @@ func LoadConfig(filename string) (*viper.Viper, error) {
 	return v, nil
 }
 
-// ParseConfig file
+// ParseConfig file for configs
 func ParseConfig(v *viper.Viper) (*Config, error) {
 	var c Config
 
@@ -56,4 +56,13 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 	}
 
 	return &c, nil
+}
+
+// GetConfigPath for local or docker env
+func GetConfigPath(config string) string {
+	if config == "docker" {
+		return "./config/config-docker"
+	}
+
+	return "./config/config-local"
 }
