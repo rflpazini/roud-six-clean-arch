@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"rflpazini/round-six/config"
 	"rflpazini/round-six/internal/server"
 
@@ -27,7 +28,12 @@ func main() {
 }
 
 func loadConfigs() (*config.Config, error) {
-	configPath := config.GetConfigPath("config")
+	env := os.Getenv("APP_ENV")
+	if env == "" {
+		env = "local"
+	}
+
+	configPath := config.GetConfigPath(env)
 	configFile, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatalf("Loading config error: %v", err)
