@@ -11,7 +11,7 @@ server:
   SSL: true
   CtxDefaultTimeout: 12
   CSRF: true
-  Debug: false
+  Debug: true
 
 logger:
   Development: true

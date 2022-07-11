@@ -1,4 +1,4 @@
-BINARY_NAME=main.out
+BINARY_NAME=bin/app
 
 # Main
 build:

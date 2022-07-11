@@ -1,0 +1,21 @@
+server:
+  AppName: Round 6
+  AppVersion: 1.0.0
+  Port: :8080
+  PprofPort: :5555
+  Mode: Production
+  JwtSecretKey: secretkey
+  CookieName: jwt-token
+  ReadTimeout: 5
+  WriteTimeout: 5
+  SSL: true
+  CtxDefaultTimeout: 12
+  CSRF: true
+  Debug: false
+
+logger:
+  Development: false
+  DisableCaller: false
+  DisableStacktrace: false
+  Encoding: json
+  Level: error
