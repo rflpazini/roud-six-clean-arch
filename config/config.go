@@ -61,8 +61,8 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 // GetConfigPath for local or docker env
 func GetConfigPath(config string) string {
 	if config == "docker" {
-		return "./config/config-docker"
+		return "config/config-docker"
 	}
 
-	return "./config/config-local"
+	return "config/config-local"
 }

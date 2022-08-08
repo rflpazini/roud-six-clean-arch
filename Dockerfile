@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine as build
+FROM golang:1.19-alpine as build
 WORKDIR /go/src/app
 
 COPY go.mod go.sum ./
@@ -10,6 +10,8 @@ RUN CGO_ENABLED=0 go build -o /go/bin/app ./cmd/main.go
 
 FROM gcr.io/distroless/base-debian11
 WORKDIR /
+
+ENV APP_ENV="docker"
 
 EXPOSE 8080
 
